@@ -84,7 +84,7 @@ todo
 
 ### 使い方
 
-(TODO)
+todo
 
 ## TODO
 
