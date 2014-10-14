@@ -5,8 +5,6 @@
   1. SHIRASAGI が動作する仮想マシンをローカル環境で起動
   2. Ansible による本番/テスト環境の構成管理
 
-(2) でも (1) と同様に、ローカルに動作環境をビルドすることが可能です。
-
 ## 仮想マシンをローカル環境で起動
 
 Vagrant を使って [Vagrant Cloud](https://vagrantcloud.com/) から [SHIRASAGI が予めインストールされた Box](https://vagrantcloud.com/hidakatsuya/boxes/shirasagi-centos65-x86_64) を取得してローカル環境で起動する方法です。
@@ -78,17 +76,17 @@ shirasagi-ansible のコードを取得:
 
 #### Mac の場合
 
-(TODO)
+todo
 
 #### Windows の場合
 
-(TODO)
+todo
 
 ### 使い方
 
 (TODO)
 
-## 今後やること
+## TODO
 
   * README.md をちゃんと書く
   * テストを書く
