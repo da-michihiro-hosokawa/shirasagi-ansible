@@ -1,0 +1,23 @@
+---
+
+- name: get SHIRASAGI
+  git: "repo={{ shirasagi.repo.url }} dest={{ shirasagi.dir.path }} depth=1 version={{ shirasagi.repo.branch }}"
+  sudo: yes
+
+- name: change owner of application directory
+  file: "owner={{ shirasagi.dir.owner }} path={{ shirasagi.dir.path }} state=directory recurse=yes"
+  sudo: yes
+
+- name: get list of default configuration files
+  command: "ls -1 {{ shirasagi.dir.path }}/config/samples"
+  register: config_files
+
+- name: copy default configuration files
+  shell: "cd {{ shirasagi.dir.path }}; cp config/samples/{{ item }} config/ creates={{ shirasagi.dir.path }}/config/{{ item }}"
+  with_items: config_files.stdout.split()
+
+- name: install runtime dependencies
+  command: "bundle install --without development test chdir={{ shirasagi.dir.path }}"
+
+- name: create indexes (db)
+  command: "bundle exec rake db:create_indexes chdir={{ shirasagi.dir.path }}"

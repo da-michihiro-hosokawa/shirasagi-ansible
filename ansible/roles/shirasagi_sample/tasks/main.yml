@@ -1,0 +1,32 @@
+---
+
+- name: create admin user
+  command: "bundle exec rake ss:user:create data='{ name: \"{{ shirasagi_sample.user.name }}\", email: \"{{ shirasagi_sample.user.email }}\", password: \"{{ shirasagi_sample.user.password }}\" }' chdir={{ shirasagi.dir.path }}"
+  tags: sample
+
+- name: create sample site
+  command: "bundle exec rake ss:site:create data='{ name: \"{{ shirasagi_sample.site.name }}\", host: \"{{ shirasagi_sample.site.host }}\", domains: \"{{ shirasagi_sample.site.domains }}\" }' chdir={{ shirasagi.dir.path }}"
+  tags: sample
+
+- name: load sample users for demo
+  command: "bundle exec rake db:seed name=users site={{ shirasagi_sample.site.host }} chdir={{ shirasagi.dir.path }}"
+  tags: sample
+
+- name: load sample sites for demo
+  command: "bundle exec rake db:seed name=demo site={{ shirasagi_sample.site.host }} chdir={{ shirasagi.dir.path }}"
+  tags: sample
+
+- name: generate static pages
+  command: "bundle exec rake {{ item }} site={{ shirasagi_sample.site.host }} chdir={{ shirasagi.dir.path }}"
+  with_items:
+    - "cms:page:release"
+    - "cms:page:generate"
+  tags: sample
+
+- name: start unicorn
+  command: "bundle exec rake unicorn:start chdir={{ shirasagi.dir.path }} creates={{ shirasagi.dir.path }}/tmp/pids/unicorn.pid"
+  tags: sample
+
+- name: check for running correctly
+  uri: "url=http://localhost:3000/.mypage/login status_code=200"
+  tags: sample

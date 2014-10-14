@@ -1,0 +1,9 @@
+shirasagi_sample:
+  user:
+    name: Administrator
+    email: system@example.jp
+    password: system
+  site:
+    name: Sample
+    host: "{{ shirasagi.default_site }}"
+    domains: "{{ ansible_eth1['ipv4']['address'] }}:3000"

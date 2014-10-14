@@ -1,0 +1,46 @@
+---
+
+- name: get mecab files
+  get_url: "url=http://mecab.googlecode.com/files/{{ item }} dest={{ ansible_env.HOME }}/{{ item }}"
+  with_items:
+    - mecab-0.996.tar.gz
+    - mecab-ipadic-2.7.0-20070801.tar.gz
+    - mecab-ruby-0.996.tar.gz
+
+- name: unarchive mecab files
+  command: "chdir={{ ansible_env.HOME }} creates={{ ansible_env.HOME }}/{{ item.dirname }} tar zxvf {{ item.filename }}"
+  with_items:
+    - { filename: 'mecab-0.996.tar.gz', dirname: 'mecab-0.996' }
+    - { filename: 'mecab-ipadic-2.7.0-20070801.tar.gz', dirname: 'mecab-ipadic-2.7.0-20070801' }
+    - { filename: 'mecab-ruby-0.996.tar.gz', dirname: 'mecab-ruby-0.996' }
+
+- name: install mecab
+  shell: "chdir={{ ansible_env.HOME }}/mecab-0.996 {{ item }}"
+  with_items:
+    - ./configure --enable-utf8-only
+    - make
+    - make install
+  sudo: yes
+
+- name: install mecab-ipadic
+  shell: "chdir={{ ansible_env.HOME }}/mecab-ipadic-2.7.0-20070801 {{ item }}"
+  with_items:
+    - ./configure --with-charset=utf8 --with-mecab-config=/usr/local/bin/mecab-config
+    - make
+    - make install
+  sudo: yes
+
+- name: install mecab-ruby
+  shell: "chdir={{ ansible_env.HOME }}/mecab-ruby-0.996 {{ item }}"
+  with_items:
+    - rvmsudo ruby extconf.rb
+    - sudo make
+    - sudo make install
+
+- name: edit ld.so.conf
+  lineinfile: dest=/etc/ld.so.conf line='/usr/local/lib'
+  sudo: yes
+
+- name: reload ldconfig
+  command: /sbin/ldconfig
+  sudo: yes

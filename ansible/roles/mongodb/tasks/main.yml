@@ -1,0 +1,16 @@
+---
+
+- name: add yum repository
+  copy: src=mongodb.repo dest=/etc/yum.repos.d/mongodb.repo mode=0644 owner=root group=root
+  sudo: yes
+
+- name: install packages
+  yum: "name={{ item }} enablerepo=10gen state=latest"
+  sudo: yes
+  with_items:
+    - mongo-10gen
+    - mongo-10gen-server
+
+- name: start mongod
+  service: name=mongod state=started enabled=yes
+  sudo: yes

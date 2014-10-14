@@ -1,0 +1,5 @@
+---
+
+- name: create cron for auto publishing
+  cron: name="shirasagi auto publishing" minute="*/15"
+          job="/bin/bash -l -c 'cd {{ shirasagi.dir.path }} && bundle exec rake cms:page:release site={{ shirasagi.default_site }} && bundle exec rake cms:page:generate site={{ shirasagi.default_site }}' >/dev/null"

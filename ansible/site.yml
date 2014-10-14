@@ -1,0 +1,20 @@
+---
+- hosts: webserver
+  vars:
+    sample_data: no
+
+    ruby_version: 2.1.2
+    shirasagi:
+      dir:
+        path: /var/www/shirasagi
+        owner: "{{ ansible_env.USER }}"
+      repo:
+        url: https://github.com/shirasagi/shirasagi
+        branch: stable
+      default_site: www
+  roles:
+    - common
+    - mongodb
+    - ruby
+    - shirasagi
+    - { role: shirasagi_sample, when: sample_data == 'yes' }

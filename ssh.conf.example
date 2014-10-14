@@ -1,0 +1,21 @@
+Host vagrant
+  HostName 192.168.33.10
+  User vagrant
+  Port 22
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /Users/username/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+
+Host www.example.com
+  HostName www.example.com
+  User sshuser
+  Port 22
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /Users/username/.ssh/id_rsa.pub
+  IdentitiesOnly yes
+  LogLevel FATAL

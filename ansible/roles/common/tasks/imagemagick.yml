@@ -1,0 +1,9 @@
+---
+
+- name: install ImageMagick
+  yum: name=ImageMagick state=latest
+  sudo: yes
+
+- name: install ImageMagick-devel
+  yum: name=ImageMagick-devel state=latest
+  sudo: yes

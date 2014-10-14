@@ -1,0 +1,4 @@
+---
+- include: application.yml
+- include: mecab.yml
+- include: cron.yml

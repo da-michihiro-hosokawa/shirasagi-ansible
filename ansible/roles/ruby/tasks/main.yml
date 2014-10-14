@@ -1,0 +1,16 @@
+---
+
+- name: install RVM
+  shell: "creates=/etc/profile.d/rvm.sh curl -sSL https://get.rvm.io | sudo bash -s stable --ruby={{ ruby_version }}"
+
+- name: around rvmsudo warning
+  shell: export rvmsudo_secure_path=1
+
+- name: create gemrc
+  file: "path={{ ansible_env.HOME }}/.gemrc state=touch"
+
+- name: set default option of gem
+  lineinfile: "dest={{ ansible_env.HOME}}/.gemrc line='gem: --no-ri --no-rdoc'"
+
+- name: install Bundler
+  shell: rvmsudo gem install bundler
