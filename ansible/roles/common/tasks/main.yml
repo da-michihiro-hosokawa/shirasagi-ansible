@@ -12,4 +12,9 @@
   pip: name=httplib2 state=latest
   sudo: yes
 
-- include: imagemagick.yml
+- name: install ImageMagick
+  yum: "name={{ item }} state=latest"
+  sudo: yes
+  with_items:
+    - ImageMagick
+    - ImageMagick-devel
