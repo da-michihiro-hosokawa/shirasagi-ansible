@@ -63,44 +63,154 @@ end
 
 ## Ansible による本番/テスト環境の構成管理
 
-### 必要なソフトウェア
+### Requirements
 
   * VirtualBox
   * Vagrant
   * Ansible
 
-### 動作確認済みの OS
+### Supported Platforms
 
   * MacOS X 10.9
-  * Windows 8.1（予定）
+  * Windows 8.1
 
-### 準備
+## Getting Started
 
-shirasagi-ansible のコードを取得:
+Vagrant + Ansible でローカルに仮想マシンを起動する手順
 
-    % git clone https://github.com/hidakatsuya/shirasagi-ansible.git
+### Step1. VirtualBox と Vagrant のインストール
 
-`git` が使えない場合は、[shirasagi-ansible](https://github.com/hidakatsuya/shirasagi-ansible) のページ右下にある "Download ZIP" ボタンから ZIP アーカイブをダウンロードして任意の場所に展開
+それぞれ、公式サイトから環境にあったファイルをダウンロードしてインストール
 
-#### Mac の場合
+### Step2. Ansible のインストール
 
-todo
+#### MacOS
 
-#### Windows の場合
+  * [By Homebrew](http://docs.ansible.com/intro_installation.html#latest-releases-via-homebrew-mac-osx)
+  * By easy_install, pip
+```
+$ sudo easy_install pip
+$ sudo pip install paramiko PyYAML jinja2 httplib2
+$ sudo pip install ansible
+```
 
-todo
+#### Windows
 
-### セットアップ
+この手順は以下のページを参考にしている:
+http://www.resilvered.com/2014/04/running-ansible-on-windows.html
 
-todo
+##### [Cygwin](https://www.cygwin.com/) のインストール
 
-### 使い方
+[Cygwin Installation](https://cygwin.com/install.html) より、32bit の場合は `setup-x86.exe` を 62bit の場合は `setup-x86_64.exe` をダウンロードして実行
 
-todo
+インストールウィザードの中で、以下のパッケージを選択すること:
+
+  * wget
+  * python
+  * python-crypto
+  * python-openssl
+  * python-setuptools
+  * git
+  * vim
+  * openssh
+  * openssl
+  * openssl-devel
+  * libsasl2
+  * ca-certificates
+
+ダウンロードミラーは `http://ftp.yz.yamagata-u.ac.jp` を選択すると良い。後は、ウィザードに従う
+
+##### Ansible のインストール
+
+Cygwin Terminal 又は Cygwin64 Terminal を起動し、 PyYAML と Jinja2 をインストール
+
+PyYAML:
+
+    $ cd ~
+    $ wget https://pypi.python.org/packages/source/P/PyYAML/PyYAML-3.11.tar.gz
+    $ tar -xvf PyYAML-3.11.tar.gz
+    $ cd PyYAML-3.11
+    $ python setup.py install
+
+Jinja2:
+
+    $ cd ~
+    $ wget https://pypi.python.org/packages/source/J/Jinja2/Jinja2-2.7.3.tar.gz
+    $ tar -xvf Jinja2-2.7.3.tar.gz
+    $ cd Jinja2-2.7.3
+    $ python setup.py install
+
+Ansible を [GitHub](https://github.com/ansible/ansible) からダウンロードし `/opt/ansible` へインストール:
+
+    $ git clone https://github.com/ansible/ansible /opt/ansible
+    $ cd /opt/ansible
+    $ git submodule update --init --recursive
+
+`~/.bash_profile` に以下の内容を追記して `$ source ~/.bash_profile` で反映
+
+```
+ANSIBLE=/opt/ansible
+export PATH=$PATH:$ANSIBLE/bin
+export PYTHONPATH=$ANSIBLE/lib
+export ANSIBLE_LIBRARY=$ANSIBLE/library
+```
+
+### Step3. shirasagi-ansible のコードを取得
+
+任意の場所にて（ホームディレクトリで実行したとする）:
+
+    $ git clone https://github.com/hidakatsuya/shirasagi-ansible.git
+
+### Step4. shirasagi-ansible のセットアップ
+
+#### SSH の設定
+
+shirasagi-ansible をインストールしたディレクトリにある ssh.conf.example を ssh.conf としてコピー:
+
+    $ cd /path/to/shirasagi-ansible
+    $ cp ssh.conf.example ssh.conf
+
+Vagrant で起動するだけなら、 ssh.conf の `IdentityFile` を Vagrant が生成する秘密鍵 `insecure_private_key` のパスに変更すれば良い。`insecure_private_key` は `$HOME/.vagrant.d/insecure_private_key` に作成されている。
+
+Windows （Cygwin）の場合は以下のように設定する:
+
+```
+Host vagrant
+   :
+  IdentityFile /cygdrive/c/Users/username/.vagrant.d/insecure_private_key
+   :
+```
+
+### Step5. Vagrant で仮想マシンを起動する
+
+    $ cd /path/to/shirasagi-ansible
+    $ vagrant up
+
+上記 `vagrant up` で、以下の処理が実行される:
+
+  1. CentOS 6.5 の box ファイルがダウンロードされ、 `box add` される
+  2. CentOS 6.5 の box がプライベートネットワーク上で `192.168.33.10` として起動
+  3. Ansible の Playbook が全て実行され、SHIRASAGI の動作環境の構築とサンプルデータがロードされる
+
+完了後、ブラウザで 192.168.33.10:3000 アクセスするとサイトが、 192.168.33.10:3000/.mypage へアクセスするとログイン画面が表示される。ユーザアカウントは、以下の通り:
+
+| ユーザID          | パスワード |
+| -----------------| --------  |
+| admin@example.jp | pass      |
+
+## Usage
+
+### Ansible Playbook を再度実行する
+
+    $ cd /path/to/shirasagi-ansible
+    $ ansible-playbook ansible/site.yml
+
+### Production 環境で Playbook を実行する
+
+TODO
 
 ## TODO
 
-  * README.md をちゃんと書く
   * テストを書く
   * 本番環境の Playbook を書く
 
