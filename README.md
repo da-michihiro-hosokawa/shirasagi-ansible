@@ -96,7 +96,7 @@ $ sudo pip install ansible
 
 #### Windows
 
-この手順は以下のページを参考にしている:
+この手順は以下のページを参考にしている:  
 http://www.resilvered.com/2014/04/running-ansible-on-windows.html
 
 ##### [Cygwin](https://www.cygwin.com/) のインストール
